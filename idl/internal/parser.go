@@ -27,7 +27,7 @@ func init() {
 }
 
 // Parse parses the given Thrift document.
-func Parse(s []byte) (*ast.Program, []LineError) {
+func Parse(s []byte) (*ast.Program, []ParseError) {
 	lex := newLexer(s)
 	e := yyParse(lex)
 	if e == 0 && !lex.parseFailed {
