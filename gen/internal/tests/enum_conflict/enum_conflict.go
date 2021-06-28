@@ -133,6 +133,24 @@ func (v *RecordType) FromWire(w wire.Value) error {
 	return nil
 }
 
+// Decode reads off the encoded RecordType directly off of the wire.
+//
+//   sReader := BinaryStreamer.Reader(reader)
+//
+//   var v RecordType
+//   if err := v.Decode(sReader); err != nil {
+//     return RecordType(0), err
+//   }
+//   return v, nil
+func (v *RecordType) Decode(sr stream.Reader) error {
+	i, err := sr.ReadInt32()
+	if err != nil {
+		return err
+	}
+	*v = (RecordType)(i)
+	return nil
+}
+
 // String returns a readable string representation of RecordType.
 func (v RecordType) String() string {
 	w := int32(v)
@@ -386,6 +404,82 @@ func (v *Records) Encode(sw stream.Writer) error {
 	}
 
 	return sw.WriteStructEnd()
+}
+
+func _RecordType_Decode(sr stream.Reader) (RecordType, error) {
+	var v RecordType
+	err := v.Decode(sr)
+	return v, err
+}
+
+func _RecordType_1_Decode(sr stream.Reader) (enums.RecordType, error) {
+	var v enums.RecordType
+	err := v.Decode(sr)
+	return v, err
+}
+
+// Decode deserializes a Records struct directly from its Thrift-level
+// representation, without going through an intemediary type.
+//
+// An error is returned if a Records struct could not be generated from the wire
+// representation.
+func (v *Records) Decode(sr stream.Reader) error {
+
+	if err := sr.ReadStructBegin(); err != nil {
+		return err
+	}
+
+	fh, ok, err := sr.ReadFieldBegin()
+	if err != nil {
+		return err
+	}
+
+	for ok {
+		switch fh.ID {
+		case 1:
+			if fh.Type == wire.TI32 {
+				var x RecordType
+				x, err = _RecordType_Decode(sr)
+				v.RecordType = &x
+				if err != nil {
+					return err
+				}
+
+			}
+		case 2:
+			if fh.Type == wire.TI32 {
+				var x enums.RecordType
+				x, err = _RecordType_1_Decode(sr)
+				v.OtherRecordType = &x
+				if err != nil {
+					return err
+				}
+
+			}
+		}
+
+		if err := sr.ReadFieldEnd(); err != nil {
+			return err
+		}
+
+		if fh, ok, err = sr.ReadFieldBegin(); err != nil {
+			return err
+		}
+	}
+
+	if err := sr.ReadStructEnd(); err != nil {
+		return err
+	}
+
+	if v.RecordType == nil {
+		v.RecordType = _RecordType_ptr(DefaultRecordType)
+	}
+
+	if v.OtherRecordType == nil {
+		v.OtherRecordType = _RecordType_1_ptr(DefaultOtherRecordType)
+	}
+
+	return nil
 }
 
 // String returns a readable string representation of a Records
